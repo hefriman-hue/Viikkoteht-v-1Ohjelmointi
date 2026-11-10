@@ -1,0 +1,518 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+
+</body>
+</html>
+<!DOCTYPE html>
+<html lang="fi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kuukausibudjetti</title>
+
+<style>
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    padding: 25px;
+    font-family: Arial, sans-serif;
+    background: #f1f4f8;
+    color: #263445;
+}
+
+.container {
+    max-width: 1050px;
+    margin: auto;
+}
+
+h1 {
+    text-align: center;
+    color: #233c58;
+}
+
+.subtitle {
+    text-align: center;
+    color: #687789;
+    margin-bottom: 25px;
+}
+
+.month {
+    text-align: center;
+    margin-bottom: 25px;
+}
+
+input, select {
+    padding: 10px;
+    border: 1px solid #ccd5df;
+    border-radius: 7px;
+    font-size: 15px;
+    width: 100%;
+}
+
+.month input {
+    max-width: 220px;
+}
+
+.summary {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+    gap: 15px;
+    margin-bottom: 25px;
+}
+
+.summary-card {
+    background: white;
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px #0000000c;
+}
+
+.summary-card h3 {
+    font-size: 14px;
+    color: #687789;
+    margin-top: 0;
+}
+
+.summary-card p {
+    font-size: 23px;
+    font-weight: bold;
+    margin-bottom: 0;
+}
+
+.sections {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 20px;
+}
+
+.section {
+    background: white;
+    padding: 22px;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px #0000000c;
+}
+
+.section h2 {
+    font-size: 19px;
+    margin-top: 0;
+    margin-bottom: 20px;
+}
+
+.income h2 { color: #21865b; }
+.expense h2 { color: #d05c55; }
+.savings h2 { color: #3976c5; }
+
+.field {
+    margin-bottom: 16px;
+}
+
+.field label {
+    display: block;
+    margin-bottom: 7px;
+    font-size: 14px;
+}
+
+.total {
+    border-top: 1px solid #e1e6ec;
+    padding-top: 15px;
+    font-weight: bold;
+    display: flex;
+    justify-content: space-between;
+}
+
+.progress-section {
+    background: white;
+    padding: 22px;
+    border-radius: 12px;
+    margin-top: 20px;
+}
+
+.progress {
+    background: #e8edf2;
+    height: 14px;
+    border-radius: 10px;
+    overflow: hidden;
+    margin: 10px 0 20px;
+}
+
+.progress-bar {
+    height: 100%;
+    width: 0%;
+    background: #3976c5;
+    transition: width .3s;
+}
+
+button {
+    border: none;
+    padding: 12px 20px;
+    border-radius: 7px;
+    cursor: pointer;
+    background: #315f91;
+    color: white;
+    font-size: 14px;
+    margin-top: 15px;
+}
+
+button:hover {
+    background: #23476f;
+}
+
+.actions {
+    text-align: center;
+}
+
+#status {
+    text-align: center;
+    color: #21865b;
+    margin-top: 10px;
+    font-size: 13px;
+}
+
+@media(max-width: 600px) {
+    body { padding: 12px; }
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+<h1>Kuukausibudjetti</h1>
+<p class="subtitle">
+Seuraa tulojasi, menojasi ja säästöjäsi kuukausittain
+</p>
+
+<div class="month">
+    <label for="month"><strong>Valitse kuukausi</strong></label><br><br>
+    <input type="month" id="month">
+</div>
+
+<div class="summary">
+
+    <div class="summary-card">
+        <h3>Tulot yhteensä</h3>
+        <p id="totalIncome">0,00 €</p>
+    </div>
+
+    <div class="summary-card">
+        <h3>Menot yhteensä</h3>
+        <p id="totalExpense">0,00 €</p>
+    </div>
+
+    <div class="summary-card">
+        <h3>Säästöt yhteensä</h3>
+        <p id="totalSavings">0,00 €</p>
+    </div>
+
+    <div class="summary-card">
+        <h3>Jäljelle jäävä raha</h3>
+        <p id="remaining">0,00 €</p>
+    </div>
+
+</div>
+
+<div class="sections">
+
+    <div class="section income">
+        <h2>↑ Tulot</h2>
+
+        <div class="field">
+            <label for="salary">Palkka (€)</label>
+            <input type="number" id="salary" min="0" step="0.01" placeholder="0,00">
+        </div>
+
+        <div class="field">
+            <label for="rentIncome">Vuokratulot (€)</label>
+            <input type="number" id="rentIncome" min="0" step="0.01" placeholder="0,00">
+        </div>
+
+        <div class="total">
+            <span>Tulot yhteensä</span>
+            <span id="incomeTotal">0,00 €</span>
+        </div>
+    </div>
+
+    <div class="section expense">
+        <h2>↓ Menot</h2>
+
+        <div class="field">
+            <label for="housing">Asumiskulut (€)</label>
+            <input type="number" id="housing" min="0" step="0.01" placeholder="0,00">
+        </div>
+
+        <div class="field">
+            <label for="food">Ruoka (€)</label>
+            <input type="number" id="food" min="0" step="0.01" placeholder="0,00">
+        </div>
+
+        <div class="field">
+            <label for="otherExpenses">Muut menot (€)</label>
+            <input type="number" id="otherExpenses" min="0" step="0.01" placeholder="0,00">
+        </div>
+
+        <div class="total">
+            <span>Menot yhteensä</span>
+            <span id="expenseTotal">0,00 €</span>
+        </div>
+    </div>
+
+    <div class="section savings">
+        <h2>◇ Säästöt ja sijoitukset</h2>
+
+        <div class="field">
+            <label for="account">Säästötili (€)</label>
+            <input type="number" id="account" min="0" step="0.01" placeholder="0,00">
+        </div>
+
+        <div class="field">
+            <label for="funds">Rahastot (€)</label>
+            <input type="number" id="funds" min="0" step="0.01" placeholder="0,00">
+        </div>
+
+        <div class="field">
+            <label for="stocks">Osakkeet (€)</label>
+            <input type="number" id="stocks" min="0" step="0.01" placeholder="0,00">
+        </div>
+
+        <div class="total">
+            <span>Säästöt yhteensä</span>
+            <span id="savingsTotal">0,00 €</span>
+        </div>
+    </div>
+
+</div>
+
+<div class="progress-section">
+    <h2>Kuukauden taloudellinen tilanne</h2>
+
+    <p>Tuloista käytetty menoihin</p>
+    <div class="progress">
+        <div class="progress-bar" id="expenseBar"></div>
+    </div>
+
+    <p>Tuloista siirretty säästöihin</p>
+    <div class="progress">
+        <div class="progress-bar" id="savingsBar"></div>
+    </div>
+
+    <p id="situation"></p>
+</div>
+
+<div class="actions">
+    <button onclick="exportCSV()">Lataa budjetti Exceliin (CSV)</button>
+    <button onclick="resetMonth()">Tyhjennä kuukauden tiedot</button>
+    <p id="status">Tiedot tallentuvat automaattisesti selaimeen.</p>
+</div>
+
+</div>
+
+<script>
+const fields = [
+    "salary",
+    "rentIncome",
+    "housing",
+    "food",
+    "otherExpenses",
+    "account",
+    "funds",
+    "stocks"
+];
+
+const monthInput = document.getElementById("month");
+
+const today = new Date();
+monthInput.value =
+    today.getFullYear() + "-" +
+    String(today.getMonth() + 1).padStart(2, "0");
+
+function money(value) {
+    return value.toLocaleString("fi-FI", {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2
+    }) + " €";
+}
+
+function getData() {
+    let data = {};
+
+    fields.forEach(id => {
+        data[id] = Number(document.getElementById(id).value) || 0;
+    });
+
+    return data;
+}
+
+function calculate() {
+    const d = getData();
+
+    const income = d.salary + d.rentIncome;
+
+    const expenses =
+        d.housing + d.food + d.otherExpenses;
+
+    const savings =
+        d.account + d.funds + d.stocks;
+
+    const remaining = income - expenses - savings;
+
+    document.getElementById("totalIncome").textContent = money(income);
+    document.getElementById("totalExpense").textContent = money(expenses);
+    document.getElementById("totalSavings").textContent = money(savings);
+    document.getElementById("remaining").textContent = money(remaining);
+
+    document.getElementById("incomeTotal").textContent = money(income);
+    document.getElementById("expenseTotal").textContent = money(expenses);
+    document.getElementById("savingsTotal").textContent = money(savings);
+
+    const expensePercent = income > 0
+        ? Math.min(100, expenses / income * 100) : 0;
+
+    const savingsPercent = income > 0
+        ? Math.min(100, savings / income * 100) : 0;
+
+    document.getElementById("expenseBar").style.width =
+        expensePercent + "%";
+
+    document.getElementById("savingsBar").style.width =
+        savingsPercent + "%";
+
+    document.getElementById("remaining").style.color =
+        remaining < 0 ? "#d05c55" : "#21865b";
+
+    let message = "";
+
+    if (remaining > 0) {
+        message = "Hyvä! Budjetti on ylijäämäinen.";
+    } else if (remaining < 0) {
+        message = "Huomio! Menot ja säästöt ylittävät tulot.";
+    } else {
+        message = "Budjetti on tasapainossa.";
+    }
+
+    document.getElementById("situation").textContent = message;
+
+    saveData();
+}
+
+function saveData() {
+    const month = monthInput.value;
+
+    if (!month) return;
+
+    const allData = JSON.parse(
+        localStorage.getItem("monthlyBudgets") || "{}"
+    );
+
+    allData[month] = getData();
+
+    localStorage.setItem(
+        "monthlyBudgets",
+        JSON.stringify(allData)
+    );
+
+    document.getElementById("status").textContent =
+        "✓ Tiedot tallennettu automaattisesti.";
+}
+
+function loadMonth() {
+    const allData = JSON.parse(
+        localStorage.getItem("monthlyBudgets") || "{}"
+    );
+
+    const data = allData[monthInput.value] || {};
+
+    fields.forEach(id => {
+        document.getElementById(id).value =
+            data[id] !== undefined ? data[id] : "";
+    });
+
+    calculate();
+}
+
+fields.forEach(id => {
+    document.getElementById(id).addEventListener(
+        "input", calculate
+    );
+});
+
+monthInput.addEventListener("change", loadMonth);
+
+function resetMonth() {
+    if (!confirm("Haluatko varmasti tyhjentää tämän kuukauden tiedot?")) {
+        return;
+    }
+
+    const allData = JSON.parse(
+        localStorage.getItem("monthlyBudgets") || "{}"
+    );
+
+    delete allData[monthInput.value];
+
+    localStorage.setItem(
+        "monthlyBudgets",
+        JSON.stringify(allData)
+    );
+
+    fields.forEach(id => {
+        document.getElementById(id).value = "";
+    });
+
+    calculate();
+}
+
+function exportCSV() {
+    const d = getData();
+
+    const rows = [
+        ["Kuukausibudjetti", monthInput.value],
+        ["Tulot", ""],
+        ["Palkka", d.salary],
+        ["Vuokratulot", d.rentIncome],
+        ["Menot", ""],
+        ["Asumiskulut", d.housing],
+        ["Ruoka", d.food],
+        ["Muut menot", d.otherExpenses],
+        ["Säästöt", ""],
+        ["Säästötili", d.account],
+        ["Rahastot", d.funds],
+        ["Osakkeet", d.stocks],
+        ["Tulot yhteensä", d.salary + d.rentIncome],
+        ["Menot yhteensä", d.housing + d.food + d.otherExpenses],
+        ["Säästöt yhteensä", d.account + d.funds + d.stocks],
+        ["Jäljelle jäävä raha",
+            d.salary + d.rentIncome -
+            d.housing - d.food - d.otherExpenses -
+            d.account - d.funds - d.stocks]
+    ];
+
+    const csv = "\uFEFF" + rows.map(row =>
+        row.map(value =>
+            '"' + String(value).replace(/"/g, '""') + '"'
+        ).join(";")
+    ).join("\n");
+
+    const blob = new Blob([csv], {
+        type: "text/csv;charset=utf-8;"
+    });
+
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+
+    a.href = url;
+    a.download = "budjetti-" + monthInput.value + ".csv";
+    a.click();
+
+    URL.revokeObjectURL(url);
+}
+
+loadMonth();
+</script>
